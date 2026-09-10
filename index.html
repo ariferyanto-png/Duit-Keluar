@@ -732,7 +732,7 @@
             updateCalcDisplay();
         }
 
-        function renderCalcRows() {
+                function renderCalcRows() {
             const doc = getCurrentCalcDoc();
             const container = document.getElementById('calcRowsContainer');
             container.innerHTML = '';
@@ -749,32 +749,29 @@
                 div.style.display = 'flex';
                 div.style.justifyContent = 'space-between';
                 div.style.alignItems = 'center';
-                div.style.padding = '4px 8px';
+                div.style.padding = '6px 8px';
                 div.style.fontSize = '0.85rem';
+                div.style.borderBottom = '1px dashed #e2e8f0';
 
                 if (item.isSpace) {
                     blockTotal = 0;
-                    div.style.height = '36px';
-                    div.style.borderBottom = '1px dashed #e2e8f0';
+                    div.style.height = '24px';
                     div.innerHTML = `
                         <div style="flex: 1;"></div>
-                        <button type="button" onclick="removeCalcRow(${index})" style="background: #fee2e2; color: #ef4444; border: none; border-radius: 4px; width: 20px; height: 20px; font-size: 0.7rem; cursor: pointer; font-weight: bold; flex-shrink: 0;">✕</button>
+                        <button type="button" onclick="removeCalcRow(${index})" style="background: #fee2e2; color: #ef4444; border: none; border-radius: 4px; width: 18px; height: 18px; font-size: 0.65rem; cursor: pointer; font-weight: bold;">✕</button>
                     `;
                 } 
                 else if (item.isResult) {
                     div.style.borderTop = '2px solid #0284c7';
-                    div.style.borderBottom = 'none';
                     div.style.backgroundColor = '#f0f9ff';
-                    div.style.marginTop = '4px';
-                    div.style.marginBottom = '4px';
                     div.style.fontWeight = '700';
 
                     div.innerHTML = `
-                        <div style="display: flex; gap: 8px; align-items: center; overflow: hidden;">
+                        <div style="display: flex; align-items: center; gap: 12px; flex: 1; overflow: hidden;">
                             <span style="color: #0284c7; min-width: 90px;">= ${blockTotal.toLocaleString('id-ID')}</span>
-                            <span style="color: #64748b; font-size: 0.78rem; font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${item.note || ''}</span>
+                            <input type="text" value="${item.note || ''}" placeholder="keterangan..." onchange="updateRowNote(${index}, this.value)" style="border: 1px solid transparent; background: transparent; font-size: 0.8rem; color: #334155; width: 100%; outline: none;" onfocus="this.style.border='1px solid #cbd5e1'; this.style.background='#fff';" onblur="this.style.border='1px solid transparent'; this.style.background='transparent';">
                         </div>
-                        <button type="button" onclick="removeCalcRow(${index})" style="background: #fee2e2; color: #ef4444; border: none; border-radius: 4px; width: 20px; height: 20px; font-size: 0.7rem; cursor: pointer; font-weight: bold; flex-shrink: 0;">✕</button>
+                        <button type="button" onclick="removeCalcRow(${index})" style="background: #fee2e2; color: #ef4444; border: none; border-radius: 4px; width: 18px; height: 18px; font-size: 0.65rem; cursor: pointer; font-weight: bold; flex-shrink: 0;">✕</button>
                     `;
                 } 
                 else {
@@ -784,16 +781,14 @@
                     else if (item.op === '÷') blockTotal /= (item.val !== 0 ? item.val : 1);
 
                     div.style.fontWeight = '600';
-                    div.style.borderBottom = '1px dashed #cbd5e1';
-                    div.style.borderTop = 'none';
-
                     const formattedVal = item.val.toLocaleString('id-ID');
+
                     div.innerHTML = `
-                        <div style="display: flex; gap: 8px; align-items: center; overflow: hidden;">
+                        <div style="display: flex; align-items: center; gap: 12px; flex: 1; overflow: hidden;">
                             <span style="color: #0369a1; min-width: 90px;">${item.op} ${formattedVal}</span>
-                            <span style="color: #64748b; font-size: 0.78rem; font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${item.note || ''}</span>
+                            <input type="text" value="${item.note || ''}" placeholder="keterangan..." onchange="updateRowNote(${index}, this.value)" style="border: 1px solid transparent; background: transparent; font-size: 0.8rem; color: #334155; width: 100%; outline: none;" onfocus="this.style.border='1px solid #cbd5e1'; this.style.background='#fff';" onblur="this.style.border='1px solid transparent'; this.style.background='transparent';">
                         </div>
-                        <button type="button" onclick="removeCalcRow(${index})" style="background: #fee2e2; color: #ef4444; border: none; border-radius: 4px; width: 20px; height: 20px; font-size: 0.7rem; cursor: pointer; font-weight: bold; flex-shrink: 0;">✕</button>
+                        <button type="button" onclick="removeCalcRow(${index})" style="background: #fee2e2; color: #ef4444; border: none; border-radius: 4px; width: 18px; height: 18px; font-size: 0.65rem; cursor: pointer; font-weight: bold; flex-shrink: 0;">✕</button>
                     `;
                 }
                 container.appendChild(div);
@@ -801,6 +796,16 @@
 
             container.scrollTop = container.scrollHeight;
         }
+
+        // Tambahkan fungsi ini tepat di bawah renderCalcRows agar catatan bisa langsung diedit
+        function updateRowNote(index, newNote) {
+            const doc = getCurrentCalcDoc();
+            if (doc.rows[index]) {
+                doc.rows[index].note = newNote;
+                saveCalcStorage();
+            }
+        }
+        
 
         function removeCalcRow(index) {
             const doc = getCurrentCalcDoc();
