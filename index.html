@@ -398,19 +398,45 @@
             loadCalcDoc();
         }
 
-        async function loadData() {
+                async function loadData() {
             const loading = document.getElementById('loadingText');
-            loading.classList.remove('hidden');
-            try {
-                const response = await fetch(WEB_APP_URL);
-                expenses = await response.json();
-                loading.classList.add('hidden');
+            
+            // 1. Cek apakah ada data di cache lokal
+            const cachedExpenses = localStorage.getItem('sisi_expenses_cache');
+            
+            if (cachedExpenses) {
+                // Jika ada cache, langsung gunakan untuk menampilkan data tanpa loading
+                expenses = JSON.parse(cachedExpenses);
                 calculate();
+                loading.classList.add('hidden'); // Sembunyikan teks loading
+            } else {
+                // Jika belum ada cache sama sekali, tampilkan loading
+                loading.classList.remove('hidden');
+            }
+
+            try {
+                // 2. Ambil data terbaru dari Cloud (Google Sheets) secara diam-diam
+                const response = await fetch(WEB_APP_URL);
+                const newData = await response.json();
+                
+                // Cek apakah data dari cloud berbeda dengan cache
+                if (JSON.stringify(newData) !== cachedExpenses) {
+                    expenses = newData;
+                    // Perbarui cache dengan data terbaru
+                    localStorage.setItem('sisi_expenses_cache', JSON.stringify(expenses));
+                    // Hitung dan render ulang dengan data terbaru
+                    calculate();
+                }
+                
+                loading.classList.add('hidden');
             } catch (error) {
-                loading.textContent = "Gagal memuat dari Cloud. Pastikan internet aktif!";
-                console.error(error);
+                if (!cachedExpenses) {
+                    loading.textContent = "Gagal memuat dari Cloud. Pastikan internet aktif!";
+                }
+                console.error("Gagal sinkronisasi background:", error);
             }
         }
+
 
         function normalizeDate(dateStr) {
             if (!dateStr) return '';
