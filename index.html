@@ -769,7 +769,7 @@
                     div.innerHTML = `
                         <div style="display: flex; align-items: center; gap: 12px; flex: 1; overflow: hidden;">
                             <span style="color: #0284c7; min-width: 90px;">= ${blockTotal.toLocaleString('id-ID')}</span>
-                            <input type="text" value="${item.note || ''}" placeholder="keterangan..." onchange="updateRowNote(${index}, this.value)" style="border: 1px solid transparent; background: transparent; font-size: 0.8rem; color: #334155; width: 100%; outline: none;" onfocus="this.style.border='1px solid #cbd5e1'; this.style.background='#fff';" onblur="this.style.border='1px solid transparent'; this.style.background='transparent';">
+                            <input type="text" value="${item.note || ''}" placeholder="..." onchange="updateRowNote(${index}, this.value)" style="border: 1px solid transparent; background: transparent; font-size: 0.8rem; color: #334155; width: 100%; outline: none;" onfocus="this.style.border='1px solid #cbd5e1'; this.style.background='#fff';" onblur="this.style.border='1px solid transparent'; this.style.background='transparent';">
                         </div>
                         <button type="button" onclick="removeCalcRow(${index})" style="background: #fee2e2; color: #ef4444; border: none; border-radius: 4px; width: 18px; height: 18px; font-size: 0.65rem; cursor: pointer; font-weight: bold; flex-shrink: 0;">✕</button>
                     `;
@@ -786,7 +786,7 @@
                     div.innerHTML = `
                         <div style="display: flex; align-items: center; gap: 12px; flex: 1; overflow: hidden;">
                             <span style="color: #0369a1; min-width: 90px;">${item.op} ${formattedVal}</span>
-                            <input type="text" value="${item.note || ''}" placeholder="keterangan..." onchange="updateRowNote(${index}, this.value)" style="border: 1px solid transparent; background: transparent; font-size: 0.8rem; color: #334155; width: 100%; outline: none;" onfocus="this.style.border='1px solid #cbd5e1'; this.style.background='#fff';" onblur="this.style.border='1px solid transparent'; this.style.background='transparent';">
+                            <input type="text" value="${item.note || ''}" placeholder="..." onchange="updateRowNote(${index}, this.value)" style="border: 1px solid transparent; background: transparent; font-size: 0.8rem; color: #334155; width: 100%; outline: none;" onfocus="this.style.border='1px solid #cbd5e1'; this.style.background='#fff';" onblur="this.style.border='1px solid transparent'; this.style.background='transparent';">
                         </div>
                         <button type="button" onclick="removeCalcRow(${index})" style="background: #fee2e2; color: #ef4444; border: none; border-radius: 4px; width: 18px; height: 18px; font-size: 0.65rem; cursor: pointer; font-weight: bold; flex-shrink: 0;">✕</button>
                     `;
