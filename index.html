@@ -627,143 +627,12 @@
             updateCalcDisplay();
         }
 
-        function updateCalcDisplay() {
+                function updateCalcDisplay() {
             const numVal = parseFloat(currentInput);
             document.getElementById('calcScreen').value = isNaN(numVal) ? currentInput : numVal.toLocaleString('id-ID');
             document.getElementById('activeOpSymbol').textContent = activeOp;
         }
 
-        function calcAppendNum(num) {
-            if (isCalculated) {
-                isCalculated = false;
-            }
-            if (currentInput === "0" && num !== ".") {
-                currentInput = num;
-            } else {
-                if (num === "." && currentInput.includes(".")) return;
-                currentInput += num;
-            }
-            updateCalcDisplay();
-        }
-
-        function calcBackSpace() {
-            if (isCalculated) return;
-            if (currentInput.length > 1) {
-                currentInput = currentInput.slice(0, -1);
-            } else {
-                currentInput = "0";
-            }
-            updateCalcDisplay();
-        }
-
-        function calcClear() {
-            const doc = getCurrentCalcDoc();
-            doc.rows = [];
-            currentInput = "0";
-            activeOp = "+";
-            isCalculated = false;
-            document.getElementById('calcNoteInput').value = '';
-            saveCalcStorage();
-            renderCalcRows();
-            updateCalcDisplay();
-        }
-
-        function calcAddOp(op) {
-            if (isCalculated) {
-                isCalculated = false;
-            }
-            const val = parseFloat(currentInput);
-            if (!isNaN(val) && (val !== 0 || currentInput !== "0")) {
-                const doc = getCurrentCalcDoc();
-                const noteText = document.getElementById('calcNoteInput').value.trim();
-                doc.rows.push({ op: activeOp, val: val, note: noteText, isResult: false });
-                currentInput = "0";
-                document.getElementById('calcNoteInput').value = '';
-                saveCalcStorage();
-            }
-            activeOp = op;
-            renderCalcRows();
-            updateCalcDisplay();
-        }
-
-        function calcEquals() {
-            // Mencegah penambahan baris berulang jika tombol '=' ditekan terus tanpa input baru
-            if (isCalculated) return;
-
-            const doc = getCurrentCalcDoc();
-            const val = parseFloat(currentInput);
-            
-            if (!isNaN(val) && (val !== 0 || currentInput !== "0")) {
-                const noteText = document.getElementById('calcNoteInput').value.trim();
-                doc.rows.push({ op: activeOp, val: val, note: noteText, isResult: false });
-                currentInput = "0";
-                document.getElementById('calcNoteInput').value = '';
-            }
-
-            if (doc.rows.length === 0) return;
-
-            // Hitung total dari baris yang ada
-            let total = 0;
-            doc.rows.forEach(item => {
-                if (item.op === '+') total += item.val;
-                else if (item.op === '-') total -= item.val;
-                else if (item.op === '×') total *= item.val;
-                else if (item.op === '÷') total /= (item.val !== 0 ? item.val : 1);
-            });
-
-            // Tambahkan baris hasil akhir
-            doc.rows.push({ op: '=', val: total, note: '', isResult: true });
-
-            currentInput = String(total);
-            activeOp = "+";
-            isCalculated = true; // Kunci agar '=' tidak melakukan perhitungan ulang otomatis
-            saveCalcStorage();
-            renderCalcRows();
-            updateCalcDisplay();
-        }
-
-        function renderCalcRows() {
-            const doc = getCurrentCalcDoc();
-            const container = document.getElementById('calcRowsContainer');
-            container.innerHTML = '';
-
-            if (doc.rows.length === 0) {
-                container.innerHTML = '<div style="text-align: center; color: #94a3b8; font-size: 0.75rem; padding: 8px;">Belum ada hitungan. Masukkan angka & operator.</div>';
-                return;
-            }
-
-            doc.rows.forEach((item, index) => {
-                const div = document.createElement('div');
-                div.style.display = 'flex';
-                div.style.justifyContent = 'space-between';
-                div.style.alignItems = 'center';
-                div.style.padding = '4px 8px';
-                div.style.fontSize = '0.85rem';
-                div.style.fontWeight = '600';
-                
-                if (item.isResult) {
-                    div.style.borderBottom = '2px solid #0284c7';
-                    div.style.backgroundColor = '#f0f9ff';
-                    div.style.marginBottom = '4px';
-                } else {
-                    div.style.borderBottom = '1px dashed #cbd5e1';
-                }
-
-                const formattedVal = item.val.toLocaleString('id-ID');
-                div.innerHTML = `
-                    <div style="display: flex; gap: 8px; align-items: center; overflow: hidden;">
-                        <span style="color: ${item.isResult ? '#0284c7' : '#0369a1'}; min-width: 90px;">${item.op} ${formattedVal}</span>
-                        <span style="color: #64748b; font-size: 0.78rem; font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${item.note || ''}</span>
-                    </div>
-                    <button type="button" onclick="removeCalcRow(${index})" style="background: #fee2e2; color: #ef4444; border: none; border-radius: 4px; width: 20px; height: 20px; font-size: 0.7rem; cursor: pointer; font-weight: bold; flex-shrink: 0;">✕</button>
-                `;
-                container.appendChild(div);
-            });
-
-            container.scrollTop = container.scrollHeight;
-        }
-
-        function removeCalcRow(index) {
         function calcAppendNum(num) {
             if (isCalculated) {
                 const doc = getCurrentCalcDoc();
@@ -949,6 +818,7 @@
                 updateCalcDisplay();
             }
         }
+        
 
 
         // --- Logika Catatan Harian (Diari) ---
